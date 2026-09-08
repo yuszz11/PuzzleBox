@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Box 2D</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="box">
+    <h1>Puzzle Box</h1>
+    
+    <!-- Area Login -->
+    <div id="start-screen">
+      <p class="subtitle">Selesaikan 20 level acak dan masuk Top Leaderboard!</p>
+      <input type="text" id="player-name" placeholder="Nama Akun">
+      <input type="password" id="player-password" placeholder="Password / PIN Akun">
+      <button onclick="startGame()">Mulai Main</button>
+    </div>
+
+    <!-- Area Game -->
+    <div id="game-screen" class="hidden">
+      <div class="level-badge">Level <span id="level-num">1</span> / 20</div>
+      <p id="question" class="question-text"></p>
+      <input type="number" id="answer" placeholder="Jawaban Anda" onkeyup="checkEnter(event)">
+      <button onclick="submitAnswer()">Submit Jawaban</button>
+      <p class="score-display">Skor: <strong id="score">0</strong></p>
+    </div>
+
+    <!-- Area Selesai -->
+    <div id="end-screen" class="hidden">
+      <h2>Game Selesai!</h2>
+      <p class="final-score-text">Skor Akhir: <strong id="final-score">0</strong></p>
+      <button id="save-btn" onclick="saveScore()">Simpan Skor ke Leaderboard</button>
+    </div>
+
+    <hr>
+
+    <!-- Leaderboard -->
+    <div class="leaderboard-section">
+      <h3>Top 10 Leaderboard</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Pos</th>
+            <th>Nama</th>
+            <th>Skor</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr>
+            <td colspan="3">Memuat leaderboard...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
