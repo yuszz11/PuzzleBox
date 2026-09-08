@@ -1,9 +1,23 @@
+// ==========================================
+// KONFIGURASI BACKEND GOOGLE APPS SCRIPT
+// ==========================================
+// Ganti dengan URL Web App Google Apps Script Anda (yang berakhiran /exec)
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx_GANTI_DENGAN_URL_WEB_APP_ANDA/exec";
+
+// ==========================================
+// STATE & VARIABEL GAME
+// ==========================================
 let currentLevel = 1;
 let score = 0;
 let correctAnswer = 0;
 let playerName = "";
 let playerPassword = "";
 
+// ==========================================
+// LOGIKA GAME & SOAL
+// ==========================================
+
+// Membuat soal acak (+ , - , *) berdasarkan level
 function generateQuestion() {
   const maxRange = Math.ceil(currentLevel / 4) * 8;
   const operators = ['+', '-', '*'];
@@ -26,6 +40,7 @@ function generateQuestion() {
   document.getElementById("question").innerText = `${num1} ${op} ${num2} = ?`;
 }
 
+// Memulai permainan
 function startGame() {
   playerName = document.getElementById("player-name").value.trim();
   playerPassword = document.getElementById("player-password").value.trim();
@@ -46,6 +61,7 @@ function startGame() {
   document.getElementById("answer").focus();
 }
 
+// Menyerahkan/Mengecek jawaban user
 function submitAnswer() {
   const answerInput = document.getElementById("answer");
   const userAnswer = parseInt(answerInput.value);
@@ -69,27 +85,36 @@ function submitAnswer() {
   }
 }
 
+// Event menekan tombol Enter pada keyboard
 function checkEnter(event) {
   if (event.key === "Enter") {
     submitAnswer();
   }
 }
 
+// ==========================================
+// INTEGRASI DATABASE (GOOGLE SHEETS)
+// ==========================================
+
+// Menyimpan skor ke Google Sheets
 async function saveScore() {
   const saveBtn = document.getElementById("save-btn");
   saveBtn.innerText = "Menyimpan...";
   saveBtn.disabled = true;
 
+  const payload = {
+    nama: playerName,
+    password: playerPassword,
+    skor: score,
+    waktu: new Date().toISOString()
+  };
+
   try {
-    const response = await fetch("/api/leaderboard", {
+    // Trik panggil Google Apps Script via text/plain agar menghindari isu CORS preflight
+    const response = await fetch(GOOGLE_SHEET_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nama: playerName,
-        password: playerPassword,
-        skor: score,
-        waktu: new Date().toISOString()
-      })
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
     });
 
     const result = await response.json();
@@ -98,29 +123,27 @@ async function saveScore() {
       alert(result.message);
       saveBtn.innerText = "Coba Lagi";
       saveBtn.disabled = false;
-    } else if (response.ok) {
-      alert("Skor berhasil tersimpan!");
-      location.reload();
     } else {
-      alert("Gagal menyimpan skor.");
-      saveBtn.innerText = "Coba Lagi";
-      saveBtn.disabled = false;
+      alert("Skor berhasil tersimpan di Google Sheets!");
+      location.reload();
     }
   } catch (error) {
-    console.error(error);
-    alert("Terjadi kesalahan koneksi server.");
+    console.error("Error saving score:", error);
+    alert("Terjadi kesalahan koneksi saat menyimpan skor.");
     saveBtn.innerText = "Coba Lagi";
     saveBtn.disabled = false;
   }
 }
 
+// Mengambil data Top 10 Leaderboard dari Google Sheets
 async function loadLeaderboard() {
+  const tbody = document.getElementById("leaderboard-body");
+  
   try {
-    const res = await fetch("/api/leaderboard");
+    const res = await fetch(GOOGLE_SHEET_URL);
     const data = await res.json();
-    const tbody = document.getElementById("leaderboard-body");
 
-    if (!data || data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
       tbody.innerHTML = `<tr><td colspan="3">Belum ada skor tercatat.</td></tr>`;
       return;
     }
@@ -133,10 +156,12 @@ async function loadLeaderboard() {
       </tr>
     `).join("");
   } catch (error) {
-    console.error(error);
-    document.getElementById("leaderboard-body").innerHTML = 
-      `<tr><td colspan="3">Gagal memuat leaderboard.</td></tr>`;
+    console.error("Error loading leaderboard:", error);
+    tbody.innerHTML = `<tr><td colspan="3">Gagal memuat data leaderboard.</td></tr>`;
   }
 }
 
-loadLeaderboard();
+// Memuat data leaderboard secara otomatis saat halaman pertama kali dibuka
+document.addEventListener("DOMContentLoaded", () => {
+  loadLeaderboard();
+});
