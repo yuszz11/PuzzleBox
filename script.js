@@ -2,7 +2,7 @@
 // KONFIGURASI BACKEND GOOGLE APPS SCRIPT
 // ==========================================
 // Ganti dengan URL Web App Google Apps Script Anda (yang berakhiran /exec)
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx_GANTI_DENGAN_URL_WEB_APP_ANDA/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx1r0Zs7Z-RGxcEV6PPRn8nQySLNbErogHuQPvw3IKDri3KNUuGvLf-xYamZMTQEqw2sA/exec";
 
 // ==========================================
 // STATE & VARIABEL GAME
