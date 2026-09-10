@@ -8,7 +8,7 @@
    ===================================================== */
 
 const GOOGLE_SCRIPT_URL =
-    "https://docs.google.com/spreadsheets/d/1-1hyQO3Q1LQhf9Uii2gLh9NgQ9rYs47pg-_C3BWgvr0/edit?usp=drivesdk";
+    "https://script.google.com/macros/s/AKfycbwHzoqN_UBFI2PdKkRtWkxL9eTF0U8qL9NDY4J5TKG6jr1KSGpLS5aOvpyR1pz_V9PAaw/exec";
 
 
 /* =====================================================
