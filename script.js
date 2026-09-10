@@ -8,7 +8,7 @@
    ===================================================== */
 
 const GOOGLE_SCRIPT_URL =
-    "MASUKKAN_URL_GOOGLE_APPS_SCRIPT_DISINI";
+    "https://docs.google.com/spreadsheets/d/1-1hyQO3Q1LQhf9Uii2gLh9NgQ9rYs47pg-_C3BWgvr0/edit?usp=drivesdk";
 
 
 /* =====================================================
